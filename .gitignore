@@ -1,0 +1,14 @@
+# Claude Code
+.claude/worktrees/
+.claude/reviews/
+.claude/settings.local.json
+
+# Environment
+.env*
+!.env.example
+
+# Vercel
+.vercel/
+
+# OS
+.DS_Store
