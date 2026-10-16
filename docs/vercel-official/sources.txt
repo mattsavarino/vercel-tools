@@ -1,0 +1,17 @@
+# Vercel docs pages mirrored into pages/ by scripts/sync-vercel-docs.sh.
+# One https://vercel.com/docs URL per line. Blank lines and # comments are ignored.
+
+https://vercel.com/docs
+https://vercel.com/docs/sandbox/concepts/drives
+https://vercel.com/docs/ai-sdk
+https://vercel.com/docs/ai-gateway
+https://vercel.com/docs/connect
+https://vercel.com/docs/agent-resources
+https://vercel.com/docs/workflows
+https://vercel.com/docs/functions
+https://vercel.com/docs/workflows/pricing
+https://vercel.com/docs/fluid-compute
+https://vercel.com/docs/functions/usage-and-pricing
+https://vercel.com/docs/daemons
+https://vercel.com/docs/eve
+https://vercel.com/docs/sitemap.md

@@ -7,6 +7,8 @@ This repo is our Vercel toolkit: context, scripts, tools, docs, and AI agents
 for getting the most out of Vercel.
 
 - Stack: Unspecified (informational; verify project config)
+- Official Vercel docs, mirrored locally: `docs/vercel-official/AGENTS.md`
+- Scripts: `scripts/` (`sync-vercel-docs.sh` refreshes the docs mirror)
 - Task rules and workflow: `docs/tasks/AGENTS.md`
 - Review panel conventions: `docs/AGENTS.md`
 - Claude-native mechanics: `CLAUDE.md` and `.claude/`
