@@ -8,6 +8,7 @@ for getting the most out of Vercel.
 
 - Stack: Unspecified (informational; verify project config)
 - Official Vercel docs, mirrored locally: `docs/vercel-official/AGENTS.md`
+- Vercel Ship 2026 notes: `docs/vercel-ship-2026/notes.md`
 - Scripts: `scripts/` (`sync-vercel-docs.sh` refreshes the docs mirror)
 - Task rules and workflow: `docs/tasks/AGENTS.md`
 - Review panel conventions: `docs/AGENTS.md`
