@@ -1,5 +1,6 @@
 {
   "enabledPlugins": {
-    "review-panel@mayurahq": true
+    "review-panel@mayurahq": true,
+    "media-tools@mayurahq": true
   }
 }
