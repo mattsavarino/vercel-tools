@@ -1,0 +1,271 @@
+---
+title: Partial Prerendering (PPR)
+product: vercel
+url: /docs/partial-prerendering
+canonical_url: "https://vercel.com/docs/partial-prerendering"
+last_updated: 2026-09-22
+type: conceptual
+prerequisites:
+  []
+related:
+  - /docs/incremental-static-regeneration
+  - /docs/functions
+  - /docs/partial-prerendering/quickstart
+  - /docs/caching/cdn-cache
+  - /docs/regions
+summary: Partial Prerendering serves a cached static shell instantly, then renders and streams the dynamic parts of a page per request.
+install_vercel_plugin: npx plugins add vercel/vercel-plugin
+---
+
+# Partial Prerendering (PPR)
+
+> **Availability**: Partial Prerendering is available on all plans
+
+Partial Prerendering (PPR) is a rendering strategy that combines fast cached static content with the ability to render fresh dynamic content, all in one response. This strategy allows you to personalize pages while still having a performant site.
+
+
+<!-- docsgraph:related -->
+## Related pages
+
+> **For AI agents:** Follow these links to understand how this page connects to the rest of the Vercel ecosystem. For the full cross-link map (inbound, outbound, prerequisites, and semantic neighbors), see the .graph.md link below.
+
+- [Deploys are now up to 33% faster for apps with many ISR pages](https://vercel.com/changelog/deploys-are-now-up-to-33-faster-for-apps-with-many-isr-pages)
+- [How to deploy a Saleor storefront on Vercel](https://vercel.com/kb/guide/how-to-deploy-a-saleor-storefront-on-vercel) — Deploy Saleor's Paper storefront template on Vercel, including environment variables, GraphQL caching, checkout, and pro
+- [Rendering strategies for retail: ISR vs SSR vs static](https://vercel.com/kb/guide/ssr-vs-ssg-vs-isr-vs-csr-for-ecommerce) — Choose between SSR, SSG, ISR, and CSR for each ecommerce surface. Compare rendering modes on freshness, personalization,
+- [Next.js 16.3 support on Vercel](https://vercel.com/blog/vercel-supports-next-js-16-3)
+- [Partial prerendering: Building towards a new default rendering model for web applications](https://vercel.com/blog/partial-prerendering-with-next-js-creating-a-new-default-rendering-model)
+- [Implementing Partial Prerendering on your platform](https://nextjs.org/docs/app/guides/ppr-platform-guide) — A guide for platform engineers on implementing PPR support, from basic origin rendering to optimized CDN integration.
+- [Introducing Serverless Pre-Rendering (SPR)](https://vercel.com/blog/serverless-pre-rendering)
+- [Deploying React with Vercel](https://vercel.com/kb/guide/deploying-react-with-vercel) — Deploy React with Vercel to replace your build pipeline and shared staging. See how framework detection, previews, and F
+- [Implementing PPR in an Adapter](https://nextjs.org/docs/app/api-reference/adapters/implementing-ppr-in-an-adapter) — Implement Partial Prerendering support in an adapter using fallback output and cache hooks.
+- [How can I prerender my application on Vercel?](https://vercel.com/kb/guide/how-can-i-prerender-my-application-on-vercel) — Learn how to enable prerendering with your frontend framework on Vercel for better performance and SEO.
+- [Vercel Data Cache: A progressive cache, integrated with Next.js](https://vercel.com/blog/vercel-cache-api-nextjs-cache)
+- [Features](https://vercel.com/docs/build-output-api/features) — Learn how to implement common Vercel platform features through the Build Output API.
+
+Full cross-link map for this page: [/docs/partial-prerendering.graph.md](/docs/partial-prerendering.graph.md)
+<!-- /docsgraph:related -->
+
+PPR requests have two parts to them: a static shell that is cached and served quickly, and a dynamic execution that fills in personalized content into the static shell. PPR uses [Incremental Static Regeneration (ISR)](/docs/incremental-static-regeneration) for the static shell of the page, and [Vercel Functions](/docs/functions) to render the dynamic parts of the page.
+
+Use PPR when a page is mostly static but has a few parts that change per request or per user:
+
+- **Product or catalog pages**: a static layout with a live price, inventory count, or cart contents.
+- **Dashboards and app shells**: a cached layout with a personalized widget, such as a user greeting or a notification count.
+- **Articles and marketing pages**: static content with personalized recommendations or an auth-aware header.
+
+If your page is fully static, use ISR since there is no dynamic content.
+
+To get started:
+
+- Follow the [getting started guide](/docs/partial-prerendering/quickstart) to enable PPR in a Next.js App Router project
+- [Set up PPR](#using-ppr) with your framework
+- Learn [how PPR works](#how-ppr-works) from build time through revalidation
+- Understand [usage and pricing](#usage-and-pricing)
+
+## Benefits of Vercel's CDN for PPR
+
+When you deploy PPR with your framework on Vercel, the CDN adds these optimizations:
+
+- **Instant shell with dynamic content in one response**: Once a region has pulled the shell into its [CDN cache](/docs/caching/cdn-cache), Vercel serves it from the nearest of Vercel's 19 [regions](/docs/regions) for a fast Time to First Byte, while your function renders the dynamic parts and streams them into the same response.
+- **Durable storage**: At deployment time, Vercel writes the shell to the [global ISR cache](/docs/incremental-static-regeneration/limits-and-pricing#isr-cache-region). On the first request in each region, Vercel pulls the shell into the regional [CDN cache](/docs/caching/cdn-cache). The shell persists in the global ISR cache until you revalidate it.
+- **Cache shielding and request collapsing**: on a CDN cache miss, Vercel reads from the global ISR cache before invoking your function, and it [collapses](/docs/incremental-static-regeneration/request-collapsing) concurrent requests to the same path into one invocation per region.
+- **Globally consistent purging**: when you revalidate content, all caches across all regions update within 300 milliseconds. Vercel purges HTML and data payloads together, so visitors see consistent content across full page loads and client-side transitions.
+- **Instant rollbacks**: cached content from previous deployments isn't purged, so you can roll back without regenerating it.
+
+## Using PPR
+
+PPR is configured through your framework's APIs. Your framework code defines which parts of a route are static and which are dynamic, and Vercel handles the caching and function execution automatically.
+
+Partial Prerendering is currently available with Next.js:
+
+| Framework                | How to enable PPR                                          |
+| ------------------------ | ---------------------------------------------------------- |
+| **Next.js** (App Router) | Enable Cache Components and mark cached segments with `use cache` |
+
+In Next.js, Cache Components and the `use cache` directive define the cached shell and the dynamic sections. You set how long cached content stays fresh with `cacheLife` and invalidate it on demand with `cacheTag`.
+
+**app/page.tsx**
+
+```tsx filename="app/page.tsx" framework=nextjs-app
+import { Suspense } from 'react';
+import { cacheTag } from 'next/cache';
+import { cookies } from 'next/headers';
+
+type Product = { id: string; name: string; price: number };
+
+async function ProductsList() {
+  'use cache';
+  cacheTag('products-list');
+
+  const products: Product[] = await fetch(
+    'https://api.example.com/products',
+  ).then((res) => res.json());
+  return (
+    <ul>
+      {products.map((product) => (
+        <li key={product.id}>{product.name} - ${product.price}</li>
+      ))}
+    </ul>
+  );
+}
+
+async function LoginState() {
+  const user = (await cookies()).get('user')?.value;
+  return <p>Welcome back, {user}</p>;
+}
+
+export default function Page() {
+  return (
+    <body>
+      <h1>Product List Page</h1>
+
+      {/* Dynamic: streamed in at request time */}
+      <Suspense fallback={<p>Loading…</p>}>
+        <LoginState />
+      </Suspense>
+
+      {/* Cached: prerendered into the static shell */}
+      <ProductsList />
+    </body>
+  );
+}
+```
+
+**app/page.js**
+
+```jsx filename="app/page.js" framework=nextjs-app
+import { Suspense } from 'react';
+import { cacheTag } from 'next/cache';
+import { cookies } from 'next/headers';
+
+async function ProductsList() {
+  'use cache';
+  cacheTag('products-list');
+
+  const products = await fetch('https://api.example.com/products').then((res) =>
+    res.json(),
+  );
+  return (
+    <ul>
+      {products.map((product) => (
+        <li key={product.id}>{product.name} - ${product.price}</li>
+      ))}
+    </ul>
+  );
+}
+
+async function LoginState() {
+  const user = (await cookies()).get('user')?.value;
+  return <p>Welcome back, {user}</p>;
+}
+
+export default function Page() {
+  return (
+    <body>
+      <h1>Product List Page</h1>
+
+      {/* Dynamic: streamed in at request time */}
+      <Suspense fallback={<p>Loading…</p>}>
+        <LoginState />
+      </Suspense>
+
+      {/* Cached: prerendered into the static shell */}
+      <ProductsList />
+    </body>
+  );
+}
+```
+
+For the full explanation and tutorial for how to use this, see [Cache Components](https://nextjs.org/docs/app/getting-started/caching). To cache data inside the dynamic sections separately from the page response, see [Runtime Cache](/docs/caching/runtime-cache).
+
+## How PPR works
+
+PPR executes at build time, request time, and through revalidation. The sections below walk through each stage.
+
+### At build time
+
+```mermaid
+flowchart LR
+    A["Deploy"] --> B["Generate shell + resume data"] --> C["Store in global ISR cache"]
+```
+
+Your framework generates two things for each PPR route: a static shell with placeholders where dynamic content goes, and the data your function needs to resume rendering the dynamic parts. When you deploy, Vercel prepopulates the shell in the [global ISR cache](/docs/incremental-static-regeneration/limits-and-pricing#isr-cache-region).
+
+### At request time
+
+```mermaid
+flowchart LR
+    A["Request"] --> B["CDN"]
+    B --> C["Serve cached shell"]
+    B --> D["Invoke function"]
+    C -->|"Instant"| E["Browser"]
+    D -->|"Streams in"| E
+```
+
+A request arrives at the nearest [Vercel region](/docs/regions). If the regional [CDN cache](/docs/caching/cdn-cache) already has the shell, Vercel serves it right away. If not, the first request in that region pulls the shell from the global ISR cache and populates the CDN cache. In both cases, your function renders the dynamic holes in parallel. The shell reaches the browser first. The function output streams into the same response as it completes, so dynamic content fills in after the initial paint.
+
+This is the key difference from ISR: even when the shell is served from the CDN cache, your function still runs to render the dynamic holes. It is possible to have a fully cached page, but most PPR requests incur a function invocation.
+
+### At revalidation time
+
+Revalidation updates the cached shell in two steps. First, your function regenerates the shell in the background. Then, the next request in each region pulls the updated shell into the regional CDN cache.
+
+```mermaid
+flowchart LR
+    A["Timer or API trigger"] --> B["Generate new shell"]
+    B --> C["Update ISR cache"]
+    C --> D["Purge CDN caches"]
+```
+
+Two triggers can update the cached content for a shell:
+
+- **Time-based revalidation** runs automatically after a set interval
+- **On-demand revalidation** runs when you call an API
+
+Both triggers run in the background, so visitors keep receiving the last generated shell while your function generates the new one. Once the new shell is in the global ISR cache, the next request in each region pulls it into the regional CDN cache and serves it:
+
+```mermaid
+flowchart LR
+    A["Request"] --> B["Regional CDN cache"]
+    B -->|"Miss"| C["Global ISR cache"]
+    C -->|"Updated shell"| B
+    B --> D["Serve cached shell"]
+    B --> E["Invoke function"]
+    D -->|"Instant"| F["Browser"]
+    E -->|"Streams in"| F
+```
+
+### On failure
+
+If revalidation fails, Vercel keeps serving the existing shell from the global ISR cache and regional CDN caches, and retries shortly after. For the full failure behavior, see [how ISR works](/docs/incremental-static-regeneration#on-failure).
+
+## Observability
+
+You can observe how your PPR routes behave from the [**Observability**](https://vercel.com/d?to=%2F%5Bteam%5D%2F~%2Fobservability\&title=Try+Observability) tab in the Vercel dashboard.
+
+The PPR observability page displays
+
+- **Shell hit rate**: See the hit rates for the static shell portion of the page. A high shell hit rate means most visitors get an instant first paint.
+- **Dynamic invocations**: The number of requests that required executing a function to fill in the dynamic portions of the page.
+
+> **💡 Note:** PPR uses Incremental Static Regeneration (ISR) for the static shell portion of the page and Vercel Functions for the dynamic portion, so additional observability details are available from the ISR and Functions observability pages.
+
+## Usage and pricing
+
+When you use PPR with a framework on Vercel, you incur usage for:
+
+- **[ISR reads and writes](/docs/incremental-static-regeneration/limits-and-pricing)**: Vercel reads the cached shell from the global ISR cache when the CDN cache misses, and writes fresh content back when it revalidates.
+- **[Function invocations](/docs/functions/usage-and-pricing)**: your function runs to render the dynamic holes on most requests, plus any background revalidations.
+- **[Fast Origin Transfer](/docs/manage-cdn-usage#fast-origin-transfer)**: rendered output transferred from your function to the CDN cache and global ISR cache.
+
+## More resources
+
+- [Partial Prerendering with Next.js](/docs/frameworks/full-stack/nextjs#partial-prerendering)
+- [Incremental Static Regeneration (ISR)](/docs/incremental-static-regeneration)
+- [Vercel Functions](/docs/functions)
+- [Runtime Cache](/docs/caching/runtime-cache)
+
+
+---
+
+[View full sitemap](/docs/sitemap)

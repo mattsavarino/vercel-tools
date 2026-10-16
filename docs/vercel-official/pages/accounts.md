@@ -1,0 +1,360 @@
+---
+title: Account Management
+product: vercel
+url: /docs/accounts
+canonical_url: "https://vercel.com/docs/accounts"
+last_updated: 2026-09-21
+type: reference
+prerequisites:
+  []
+related:
+  - /docs/plans/hobby
+  - /docs/plans/pro-plan
+  - /docs/plans/enterprise
+  - /docs/git/vercel-for-github
+  - /docs/git/vercel-for-gitlab
+summary: Learn how to manage your Vercel account and team members.
+install_vercel_plugin: npx plugins add vercel/vercel-plugin
+---
+
+# Account Management
+
+When you first sign up for Vercel, you'll create an account. This account is used to manage your Vercel resources. Vercel has three types of plans:
+
+
+<!-- docsgraph:related -->
+## Related pages
+
+> **For AI agents:** Follow these links to understand how this page connects to the rest of the Vercel ecosystem. For the full cross-link map (inbound, outbound, prerequisites, and semantic neighbors), see the .graph.md link below.
+
+- [Constructing CI](https://turborepo.dev/docs/crafting-your-repository/constructing-ci) — Set up CI pipelines with Remote Caching, task filtering, Docker support, and affected package detection for maximum spee
+- [Auto-add Git committers to your team](https://vercel.com/changelog/auto-add-git-committers-to-your-team)
+- [Introducing new token formats and secret scanning](https://vercel.com/changelog/new-token-formats-and-secret-scanning)
+- [Tag-based cache invalidation now available for all responses](https://vercel.com/changelog/tag-based-cache-invalidation-now-available-for-all-responses)
+- [Firewall Terraform Configuration](https://vercel.com/kb/guide/firewall-terraform-configuration) — Learn how to create scalable firewall configurations with Terraform
+- [How do I transfer ownership of a Vercel team?](https://vercel.com/kb/guide/how-do-i-transfer-ownership-of-a-vercel-team) — Learn how to transfer ownership of a Vercel team, including the exact dashboard steps to promote a new Owner and remove
+- [Using TanStack AI with Vercel Sandbox](https://vercel.com/kb/guide/tanstack-ai-vercel-sandbox) — Run coding agents in isolated Vercel Sandbox microVMs with the @tanstack/ai-sandbox-vercel provider, with durable resume
+- [Teams](https://v0.app/docs/teams) — Collaborate with your team on projects with shared resources.
+- [September 2020](https://vercel.com/blog/changelog-september-2020)
+- [Transition your Hobby team after EMU enrollment](https://vercel.com/docs/security/enterprise-managed-users-account-update) — Explains the account update screen EMU members see at SSO sign-in and how to complete it.
+- [Troubleshoot project collaboration](https://vercel.com/docs/deployments/troubleshoot-project-collaboration) — Learn about common reasons for deployment issues related to team member requirements and how to resolve them.
+- [Project settings](https://vercel.com/docs/project-configuration/project-settings) — Use the project settings, to configure custom domains, environment variables, Git, integrations, deployment protection,
+
+Full cross-link map for this page: [/docs/accounts.graph.md](/docs/accounts.graph.md)
+<!-- /docsgraph:related -->
+
+- [Hobby](/docs/plans/hobby)
+- [Pro](/docs/plans/pro-plan)
+- [Enterprise](/docs/plans/enterprise)
+
+Each plan offers different features and resources, allowing you to choose the right plan for your needs.
+
+When signing up for Vercel, you can choose to sign up with an email address or a Git provider.
+
+## Sign up with email
+
+To sign up with email:
+
+1. Enter your email address to receive the six-digit one-time password (OTP)
+2. Enter the OTP to proceed with logging in successfully.
+
+When signing up with your email, no Git provider will be connected by default. See [login methods and connections](#login-methods-and-connections) for information on how to connect a Git provider. If no Git provider is connected, you will be asked to verify your account on every login attempt.
+
+## Sign up with a Git provider
+
+You can sign up with any of the following supported Git providers:
+
+- [**GitHub**](/docs/git/vercel-for-github)
+- [**GitLab**](/docs/git/vercel-for-gitlab)
+- [**Bitbucket**](/docs/git/vercel-for-bitbucket)
+
+Authorize Vercel to access your Git provider account. **This will be the default login connection on your account**.
+
+Once signed up you can manage your login connections in the [authentication section](/account/authentication) of your dashboard.
+
+## Login methods and connections
+
+You can manage your login connections in the **Authentication** section of [your account settings](/account/authentication). To find this section:
+
+1. Select your profile picture near the top-right of the dashboard
+2. Select **Settings** in the dropdown that appears
+3. Select **Authentication** in the list near the left side of the page
+
+![The Authentication section of your account settings.](https://7nyt0uhk7sse4zvn.public.blob.vercel-storage.com/docs-assets/static/docs/accounts/authentication-page-light.png)
+
+### Login with passkeys
+
+Passkeys allow you to log into your Vercel account using biometrics such as face or fingerprint recognition, PINs, hardware security keys, and more.
+
+To add a new passkey:
+
+1. From the dashboard, click your account avatar and select **Settings**. In your [account settings](/account/authentication), go to the **Authentication** item
+2. Under **Add New**, select the **Passkey** button and then click **Continue**
+3. Select the authenticator of preference. This list depends on your browser and your eligible devices. By default, Vercel will default to a password manager if you have one installed on your browser and will automatically prompt you to save the passkey
+4. Follow the instructions on the device or with the account you've chosen as an authenticator
+
+When you're done, the passkey will appear in a list of login methods on the **Authentication** page, alongside your other connections.
+
+### Logging in with SAML Single Sign-On
+
+SAML Single Sign-On enables you to log into your Vercel team with your organization's identity provider which manages your credentials.
+
+SAML Single Sign-On is available to Enterprise teams, or Pro teams can purchase it as a paid add-on from their [Billing settings](https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fsettings%2Fbilling%23paid-add-ons). The feature can be configured by team Owners from the team's Security & Privacy settings.
+
+### Choosing a connection when creating a project
+
+When you create an account on Vercel, you will be prompted to create a project by either importing a Git repository or using a template.
+
+Either way, you must connect a Git provider to your account, which you'll be able to use as a login method in the future.
+
+### Using an existing login connection
+
+Your Hobby team on Vercel can have only one login connection per third-party service. For example, you can only log into your Hobby team with a single GitHub account.
+
+For multiple logins from the same service, create a new Vercel Hobby team.
+
+## Managing your profile
+
+You can change your personal avatar and username in [your account settings](/account/settings).
+
+If you're an [Enterprise Managed User](/docs/security/enterprise-managed-users), your organization manages your profile, and you can't change your avatar or username yourself.
+
+### Changing your avatar
+
+To update your personal avatar:
+
+1. Open [your account settings](/account/settings).
+2. In the **Avatar** section, select your current avatar.
+3. Choose a PNG, JPEG, or WebP image from your files.
+4. Adjust the crop and click **Set Avatar**.
+
+Your new avatar appears when the upload completes.
+
+### Changing your username
+
+Your username identifies your personal account and its URL namespace, `vercel.com/<username>`. To change it:
+
+1. Open [your account settings](/account/settings).
+2. In the **Username** section, enter your new username using up to 48 characters.
+3. Click **Save**.
+
+Vercel displays a confirmation when your username updates.
+
+## Teams
+
+Teams on Vercel let you collaborate with other members on projects and access additional resources.
+
+### Switching teams
+
+To view another team's projects and resources:
+
+1. Open the [Vercel dashboard](/dashboard).
+2. Select the team switcher at the top left of the navigation bar.
+3. Select the team you want to view from the list of teams you belong to.
+
+To choose which team appears when you first log in or open the dashboard, [change your default team](#how-to-change-your-default-team).
+
+### Creating a team
+
+#### Dashboard
+
+1. Click on the team switcher at the top left of the nav bar
+2. Choose to create a new team
+3. Name your team
+4. Depending on the types of team plans that you have already created, you'll be able to select a team plan option:
+
+![Selecting a team plan.](https://7nyt0uhk7sse4zvn.public.blob.vercel-storage.com/docs-assets/static/docs/concepts/teams/new-team-light.png)
+
+#### CLI
+
+Run [`vercel teams create`](/docs/cli/teams):
+
+```bash filename="terminal"
+vercel teams create --slug <team-slug> --name "<team-name>"
+```
+
+#### cURL
+
+To create an Authorization Bearer token, see the [access token](/docs/rest-api#creating-an-access-token) section of the API documentation.
+
+```bash filename="cURL"
+curl --request POST \
+  --url https://api.vercel.com/v1/teams \
+  --header "Authorization: Bearer $VERCEL_TOKEN" \
+  --header "Content-Type: application/json" \
+  --data '{
+  "slug": "<team-slug>",
+  "name": "<team-name>"
+}'
+```
+
+#### SDK
+
+To create an Authorization Bearer token, see the [access token](/docs/rest-api#creating-an-access-token) section of the API documentation.
+
+```ts filename="createTeam"
+import { Vercel } from '@vercel/sdk';
+
+const vercel = new Vercel({
+  bearerToken: '<YOUR_BEARER_TOKEN_HERE>',
+});
+
+async function run() {
+  const result = await vercel.teams.createTeam({
+    slug: 'team-slug',
+    name: 'team-name',
+  });
+
+  // Handle the result
+  console.log(result);
+}
+
+run();
+```
+
+Collaborating with other members on projects is available on the [Pro](/docs/plans/pro-plan) and [Enterprise](/docs/plans/enterprise) plans.
+
+Upgrade from the [Hobby](/docs/plans/hobby) plan to [Pro](/docs/plans/hobby#upgrading-to-pro) to add team members.
+
+After [creating a new trial](/docs/plans/pro-plan/trials), you'll have 14 days of Pro premium features and collaboration for free, except for features limited to paid Pro such as the free first-year custom domain offer (see [trial limitations](/docs/plans/pro-plan/trials#trial-limitations)).
+
+### Team membership
+
+You can join a Vercel team through an invitation from a [team owner](/docs/rbac/access-roles#owner-role), automatic addition by a team's [identity provider](/docs/saml), or by pushing a commit to a private Git repository owned by the team. If you have a Vercel account linked to your Git provider, and the team has enabled **Auto Approval**, you'll be automatically added to the team. If the team has enabled **Manual Approval**, a [team Owner](/docs/rbac/access-roles/team-level-roles) must approve your membership first.
+
+### Leaving a team
+
+> **💡 Note:** You can't leave a team if you are the last remaining
+> [owner](/docs/rbac/access-roles#owner-role) or the last confirmed
+> [member](/docs/rbac/access-roles#member-role).
+
+To leave a team:
+
+1. If there isn't another owner for your team, you must assign a different confirmed member as the team owner
+2. Go to your team's dashboard and open **Settings** in the sidebar
+3. Scroll to the **Leave Team** section and select the **Leave Team** button
+4. Click **Confirm**
+5. If you are the only remaining member, you should delete the team instead
+
+### Deleting a team
+
+To delete a team:
+
+1. Remove all team domains
+2. Go to your team's dashboard and open **Settings** in the sidebar
+3. Scroll to the **Delete Team** section and select the **Delete Team** button
+4. Click **Confirm**
+
+If you'd prefer to cease payment instead of deleting your team, you can [downgrade to Hobby](/docs/plans/pro-plan#downgrading-to-hobby).
+
+### Default team
+
+Your default team will be used when you make a request through the [API](/docs/rest-api) or [CLI](/docs/cli) and don’t specify a specific team. It will also be the team shown whenever you first log in to Vercel or navigate to `/dashboard`. The first Hobby or Pro team you create will automatically be nominated as the default team.
+
+#### How to change your default team
+
+If you delete, leave, or are removed from your default team, Vercel will automatically choose a new default team for you. However, you may want to choose a default team yourself. To do that:
+
+1. Navigate to [vercel.com/account/settings](https://vercel.com/account/settings)
+2. Under **Default Team**, select your new default team from the dropdown
+3. Press **Save**
+
+### Find your team ID
+
+Your Team ID is a unique and unchangeable identifier that's automatically assigned when your team is created.
+
+There are a couple of methods you can use to locate your Team ID:
+
+- **Vercel API**: Use the [Vercel API](/docs/rest-api/teams/list-all-teams) to retrieve your Team ID
+- **Dashboard**: Find your Team ID directly from your team's Dashboard on Vercel:
+  - Navigate to the following URL, replacing `your_team_name_here` with your actual team's name: `https://vercel.com/teams/your_team_name_here/settings#team-id`.
+    If you're unable to locate your Team ID using the URL method, follow these steps:
+  - Open your team's dashboard and head over to the **Settings** section in the sidebar
+  - Choose **General** from the left-hand navigation
+  - Scroll down to the Team ID section and your Team ID will be there ready for you to copy
+
+## Collaboration settings
+
+When someone pushes a commit to a private Git repository connected to your team's project, Vercel determines how the commit author is added to your team based on the [collaboration settings](https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fsettings%2Fmembers%23collaboration-settings\&title=Collaboration+Settings). You can configure this behavior in your team's **Settings** > **Members** > **Collaboration**.
+
+There are two approval modes: **Auto Approval** and **Manual Approval**. Both modes are available on [Pro](/docs/plans/pro-plan) and [Enterprise](/docs/plans/enterprise) teams.
+
+### Auto approval
+
+When a commit author has a Vercel account linked to their Git provider, Vercel automatically adds them to your team with the [Developer role](/docs/rbac/access-roles#developer-role). Their deployment then continues immediately.
+
+On the [Pro](/docs/plans/pro-plan) and [Enterprise](/docs/plans/enterprise) plans, the Developer role is a paid seat. With **Auto Approval** enabled, anyone who pushes a commit to a private repository connected to one of your team's projects, and has a Vercel account linked to their Git provider, is added to your team as a billed Developer seat with no confirmation step. If you want to decide who becomes a paid member of your team, use [Manual approval](#manual-approval) instead.
+
+Team owners receive a notification when a new member is added through auto approval.
+
+### Manual approval
+
+When you enable manual approval, Vercel does not automatically add commit authors with a Vercel account to the team when they commit to your repository. Instead, Vercel blocks the deployment and team owners receive a notification to approve or decline the pending membership.
+
+After approval, Vercel adds the new member to your team with the [Developer role](/docs/rbac/access-roles#developer-role). Because the commit author does not join the team until an owner approves the membership, no seat is added or billed for them until approval.
+
+### Shared responsibility
+
+Only grant write access to trusted contributors. In either approval mode, commit authors who are added to your Vercel team receive the [Developer role](/docs/rbac/access-roles#developer-role), which gives them visibility into team members, team projects, and other permissions assigned to that role.
+
+### Committers without a Vercel account
+
+If a commit author does not have a linked Vercel account, the deployment fails regardless of which approval mode is enabled. The commit author must create a Vercel account and link their Git provider before they can deploy.
+
+### Notifications
+
+Team owners are notified in both approval modes:
+
+- **Auto approval**: Vercel sends a notification when a new member is automatically added to the team.
+- **Manual approval**: Vercel sends a notification when a new commit author's deployment is blocked and their membership is pending review. You can follow the link in the notification to approve or decline the request.
+
+### Billing
+
+Members added through collaboration settings receive the [Developer role](/docs/rbac/access-roles#developer-role) and are billed at the same seat pricing as members added through invitations or identity provider sync. On Pro teams, see [Pro plan pricing](/docs/plans/pro-plan#additional-team-seats) for seat costs. On [Enterprise](/docs/plans/enterprise) teams, Developer seat pricing follows your Enterprise contract.
+
+The approval mode determines when a paid seat is added:
+
+- **Auto Approval**: a new Developer seat is added, and billed, as soon as an eligible commit author is automatically added to your team.
+- **Manual Approval**: no seat is added until a team owner approves the pending membership. Declining the request adds no seat.
+
+These settings apply to commits pushed to private repositories. Collaboration on public repositories is free.
+
+## Managing emails
+
+To access your email settings from the dashboard:
+
+1. Select your avatar in the top right corner of the [dashboard](https://vercel.com/d?to=%2Fdashboard\&title=Open+Dashboard).
+2. Select **Account Settings** from the list.
+3. Open **Settings** in the sidebar and scroll down to the **Emails** section.
+4. You can then [add](/docs/accounts#adding-a-new-email-address), [remove](/docs/accounts#removing-an-email-address), or [change](/docs/accounts#changing-your-primary-email-address) the primary email address associated with your account.
+
+## Adding a new email address
+
+To add a new email address
+
+1. Follow the steps above and select the **Add Another** button in the **Emails** section of your account settings.
+2. Once you have added the new email address, Vercel will send an email with a verification link to the newly added email. Follow the link in the email to verify your new email address.
+3. Once verified, all email addresses can be used to log in to your account, including your primary email address.
+
+You can add up to three emails per account, with a single email domain shared by two emails at most.
+
+![Your account email addresses.](https://7nyt0uhk7sse4zvn.public.blob.vercel-storage.com/docs-assets/static/docs/accounts/account-emails-2-light.png)
+
+## Changing your primary email address
+
+Your primary email address is the email address that will be used to send you notifications, such as when you receive a new [preview comment](/docs/comments) or when you are [invited to a team](/docs/rbac/managing-team-members#adding-team-members-and-assigning-roles).
+
+Once you have added and verified a new email address, you can change your primary email address by selecting **Set as Primary** in the dot menu.
+
+![Setting your primary email address.](https://7nyt0uhk7sse4zvn.public.blob.vercel-storage.com/docs-assets/static/docs/accounts/account-emails-set-primary-2-light.png)
+
+## Removing an email address
+
+To remove an email address select the **Delete** button in the dot menu.
+
+If you wish to remove your primary email address, you will need to set a new primary email address first.
+
+
+---
+
+[View full sitemap](/docs/sitemap)

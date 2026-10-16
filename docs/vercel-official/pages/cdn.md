@@ -1,0 +1,174 @@
+---
+title: Vercel CDN overview
+product: vercel
+url: /docs/cdn
+canonical_url: "https://vercel.com/docs/cdn"
+last_updated: 2026-09-14
+type: conceptual
+prerequisites:
+  []
+related:
+  - /docs/deployments/environments
+  - /docs/regions
+  - /docs/caching
+  - /docs/routing
+  - /docs/routing/rewrites
+summary: "Vercel's CDN is a globally distributed platform that handles routing, caching, security, and compression for every deployment."
+install_vercel_plugin: npx plugins add vercel/vercel-plugin
+---
+
+# Vercel CDN overview
+
+Vercel's CDN is a globally distributed network that caches content near your visitors, routes requests, and runs compute close to your data. Every deployment includes it automatically.
+
+
+<!-- docsgraph:related -->
+## Related pages
+
+> **For AI agents:** Follow these links to understand how this page connects to the rest of the Vercel ecosystem. For the full cross-link map (inbound, outbound, prerequisites, and semantic neighbors), see the .graph.md link below.
+
+- [Using Vercel as a Standalone CDN](https://vercel.com/kb/guide/using_vercel_as_a_cdn) — Use Vercel's external rewrites to proxy and cache content from external websites or APIs through Vercel's global edge ne
+- [How to use and optimize videos](https://nextjs.org/docs/app/guides/videos) — Recommendations and best practices for optimizing videos in your Next.js application.
+- [Caching details now available in Runtime Logs](https://vercel.com/changelog/caching-details-now-available-in-runtime-logs)
+- [Python projects now support routing rules](https://vercel.com/changelog/python-projects-now-support-routing-rules)
+- [Vercel CDN gets a new dashboard experience](https://vercel.com/changelog/vercels-cdn-gets-a-new-dashboard-experience)
+- [Can I use my domain on Vercel with A records?](https://vercel.com/kb/guide/a-record-and-caa-with-vercel) — Point your apex domain to Vercel with an A record \\(76.76.21.21 or your domain card's value\\), pair it with a www CNAME,
+- [Build with an Express starter template](https://vercel.com/kb/guide/build-with-a-express-starter-template) — Deploy an Express app to Vercel from a template. Browse Express starters from Vercel and the community, then run them lo
+- [Build with a FastAPI starter template](https://vercel.com/kb/guide/build-with-a-fastapi-starter-template) — Browse FastAPI starter templates for Vercel and deploy one in a few steps. Compare minimal, AI, agent, and full-stack Fa
+- [Build with a Flask starter template](https://vercel.com/kb/guide/build-with-a-flask-starter-template) — Deploy a Flask app to Vercel from a starter template. Compare the Flask Hello World starter, AI SDK, alt text generator,
+- [Backends on Vercel: Python, containers, and Daemons](https://vercel.com/blog/backends-on-vercel-python-containers-and-daemons)
+- [Build your own web framework](https://vercel.com/blog/build-your-own-web-framework)
+- [Introducing Flat Rate CDN](https://vercel.com/blog/introducing-flat-rate-cdn)
+
+Full cross-link map for this page: [/docs/cdn.graph.md](/docs/cdn.graph.md)
+<!-- /docsgraph:related -->
+
+Unlike traditional CDNs that only cache static assets, Vercel's CDN is framework-aware. It reads your routing, caching, and rendering configuration at build time, with the following benefits:
+
+- **Git-driven and previewable**: Every CDN change is scoped to a branch and deployed to a unique [preview URL](/docs/deployments/environments#preview-environment-pre-production), so you can test routing, caching, and security rules before they reach production.
+- **Global network**: [126+ PoPs across 51 countries and 20+ Vercel regions](/docs/regions), with built-in request acceleration and high-availability architecture.
+- **Framework-aware, zero config**: CDN configuration and [caching policies](/docs/caching) are an output of the build and deployment process if you are using a supported framework, eliminating the need to define manual cache-control headers.
+- **Standard CDN directives**: When needed, you can override [routing and caching rules](/docs/routing). You can also proxy and cache responses from external backends with [external rewrites](/docs/routing/rewrites#external-rewrites), and [invalidate content by tag](/docs/caching/cdn-cache/purge) across all frameworks and backends.
+- **Default protections**: Unmetered, always-on [DDoS mitigation and network-level security](/docs/vercel-firewall) on every deployment at no extra cost.
+
+## What you can build
+
+You can use Vercel's CDN across a range of architectures:
+
+- **Static sites and marketing pages**: Pre-render pages at build time and serve them from the CDN without invoking your origin.
+- **E-commerce storefronts**: Cache product catalogs with [ISR](/docs/incremental-static-regeneration) and revalidate in the background when inventory or pricing changes.
+- **Content-driven platforms**: Let editors publish CMS changes that propagate globally within seconds, without a redeployment.
+- **SaaS dashboards**: Serve authenticated pages with [Vercel Functions](/docs/functions) while the CDN caches shared assets and API responses.
+- **AI-powered applications**: Stream responses from AI models through [streaming functions](/docs/functions/streaming-functions) and cache deterministic results with [runtime cache](/docs/caching/runtime-cache).
+- **Multi-region APIs**: Set [Cache-Control headers](/docs/caching/cache-control-headers) for per-region caching and use [rewrites](/docs/routing/rewrites) to proxy requests to external backends.
+- **Hybrid architectures**: Mix static, ISR, and dynamic routes in the same project. The CDN applies the right strategy per route from your framework configuration.
+
+### Get started with templates
+
+Deploy a CDN-ready template to see routing, caching, and revalidation in action:
+
+[View all CDN templates](https://vercel.com/templates/cdn)
+
+## How Vercel CDN works
+
+Every request flows through the CDN's routing, caching, and compute layers before reaching your application code. Each layer can resolve the request or pass it to the next.
+
+- [How a request flows through the CDN](/docs/how-vercel-cdn-works)
+- [Compression](/docs/how-vercel-cdn-works/compression)
+
+### Global network and regions
+
+Vercel operates 126 Points of Presence (PoPs) across 51 countries. Behind them, compute-capable regions run your code close to your data. Traffic flows between PoPs and regions over a private, low-latency network.
+
+- [Region list and infrastructure details](/docs/regions)
+
+## Routing
+
+The CDN evaluates routing rules before checking any cache. Redirects return a new URL to the client. Rewrites map a public URL to a different backend path. Header rules modify request and response metadata.
+
+- [Redirects](/docs/routing/redirects)
+- [Rewrites](/docs/routing/rewrites)
+- [Reverse proxy with external rewrites](/docs/routing/rewrites#external-rewrites)
+
+## Security
+
+The CDN enforces security before requests reach your application. Every deployment uses HTTPS with automatically provisioned SSL certificates and TLS 1.2/1.3 support. A platform-wide firewall with DDoS mitigation inspects every request at the CDN level. You can also configure a Web Application Firewall (WAF) with custom rules at the project level.
+
+- [CDN security overview](/docs/cdn-security)
+- [Encryption & TLS](/docs/cdn-security/encryption)
+- [Security headers](/docs/cdn-security/security-headers)
+- [Vercel WAF](/docs/vercel-firewall/vercel-waf)
+
+## Caching
+
+Vercel maintains multiple caching tiers to reduce how often your functions run.
+
+### Incremental Static Regeneration
+
+Incremental Static Regeneration (ISR) serves cached pages to visitors while regenerating content in the background. When the cache expires, Vercel re-renders the page and updates all regions so visitors always get a fast response. Vercel manages caching, request collapsing, and purging automatically when you use ISR with Next.js, SvelteKit, Nuxt, or Astro.
+
+- [How ISR works](/docs/incremental-static-regeneration)
+- [Getting started with ISR](/docs/incremental-static-regeneration/quickstart)
+- [ISR usage and pricing](/docs/incremental-static-regeneration/limits-and-pricing)
+- [Request collapsing](/docs/incremental-static-regeneration/request-collapsing)
+
+### CDN cache and runtime cache
+
+The CDN cache stores responses across Vercel regions, closest to your visitors. The runtime cache stores fetch results, database queries, and computed values inside your functions.
+
+- [CDN cache](/docs/caching/cdn-cache)
+- [Cache-Control headers](/docs/caching/cache-control-headers)
+- [Runtime cache](/docs/caching/runtime-cache)
+
+## System headers
+
+Every deployment includes system-level headers on requests and responses. You can use these headers to inspect routing decisions, caching status, and request identity for debugging and observability.
+
+- [Response headers](/docs/headers/response-headers)
+- [Request headers](/docs/headers/request-headers)
+
+## Image optimization
+
+You can resize, crop, and convert images to modern formats like WebP and AVIF. Vercel transforms and caches the results on the CDN, so you don't need a separate image pipeline.
+
+- [Image optimization](/docs/image-optimization)
+
+## Custom error pages
+
+You can configure branded error pages for 5xx server errors so visitors see a consistent experience when something goes wrong.
+
+- [Custom error pages](/docs/custom-error-pages)
+
+## Pricing and usage
+
+CDN pricing covers [CDN requests](/docs/manage-cdn-usage#cdn-requests), data transfer to visitors, and [Fast Origin Transfer](/docs/manage-cdn-usage#fast-origin-transfer). Pricing can vary by the region where requests originate.
+
+For resource definitions, rates, usage dashboards, and ways to manage or stop charges, see [CDN pricing and usage](/docs/manage-cdn-usage).
+
+### CDN service tiers
+
+Vercel offers three CDN service tiers for different reliability, cost, and usage patterns: [On-demand CDN](#on-demand-cdn), [Flat Rate CDN](#flat-rate-cdn), and [Flex CDN](#flex-cdn).
+
+#### On-demand CDN
+
+On-demand CDN is the usage-based model for teams that want CDN usage to scale automatically with demand. You pay for the CDN resources your team uses, without choosing a predefined capacity level.
+
+Use On-demand CDN when you need the highest level of reliability, have mission-critical or highly variable traffic, or prefer to pay directly for usage.
+
+#### Flat Rate CDN
+
+[Flat Rate CDN](/docs/pricing/flat-rate-cdn) is a Pro feature that gives your team a fixed monthly price for CDN capacity that matches your typical usage.
+
+Use Flat Rate CDN when you want reliable delivery and predictable monthly CDN costs. Short-term spikes in usage **do not** change your bill, but remain subject to the [fair use guidelines](/docs/pricing/flat-rate-cdn#fair-use-guidelines).
+
+#### Flex CDN
+
+Flex CDN is a best-effort service tier for projects that can tolerate reduced reliability.
+Traffic on Flex CDN has no latency or availability guarantees, regardless of level.
+
+Flex CDN is available only to teams using Flat Rate CDN. To move a project onto Flex, see [Excluding projects from Flat Rate CDN](/docs/pricing/flat-rate-cdn#excluding-projects-from-flat-rate-cdn).
+
+
+---
+
+[View full sitemap](/docs/sitemap)
