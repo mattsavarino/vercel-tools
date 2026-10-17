@@ -1,0 +1,181 @@
+---
+title: Quickstart
+product: vercel
+url: /docs/sandbox/quickstart
+canonical_url: "https://vercel.com/docs/sandbox/quickstart"
+last_updated: 2026-09-11
+type: tutorial
+prerequisites:
+  - /docs/sandbox
+related:
+  - /docs/cli
+  - /docs/sandbox/concepts/authentication
+  - /docs/sandbox/working-with-sandbox
+  - /docs/sandbox/pricing
+  - /docs/sandbox/concepts/persistent-sandboxes
+summary: Learn how to run your first code in a Vercel Sandbox.
+install_vercel_plugin: npx plugins add vercel/vercel-plugin
+---
+
+# Quickstart
+
+This guide shows you how to run your first code in a Vercel Sandbox.
+
+
+<!-- docsgraph:related -->
+## Related pages
+
+> **For AI agents:** Follow these links to understand how this page connects to the rest of the Vercel ecosystem. For the full cross-link map (inbound, outbound, prerequisites, and semantic neighbors), see the .graph.md link below.
+
+- [How to use snapshots for faster sandbox startup](https://vercel.com/kb/guide/how-to-use-snapshots-for-faster-sandbox-startup) — Learn how to save sandbox state with snapshots and skip installation on future runs.
+- [Using Vercel Sandbox to run Claude’s Agent SDK](https://vercel.com/kb/guide/using-vercel-sandbox-claude-agent-sdk) — Learn how to deploy Claude's Agent SDK in Vercel Sandbox for secure and isolated execution of AI-powered code generation
+- [Safely running AI generated code in your Next.js application](https://vercel.com/kb/guide/running-ai-generated-code-sandbox) — How to execute untrusted, AI‑generated code from a Next.js app using Vercel Sandbox, an isolated, ephemeral environment.
+- [Run untrusted code with Vercel Sandbox, now generally available](https://vercel.com/blog/vercel-sandbox-is-now-generally-available)
+- [How to reconnect to a running Sandbox](https://vercel.com/kb/guide/how-to-reconnect-to-a-running-sandbox) — Learn how to use \\`Sandbox.get\\(\\)\\` to reconnect to an existing sandbox from a different process or after a script rest
+- [Running OpenCode securely with the Vercel Sandbox](https://vercel.com/kb/guide/running-opencode-securely-with-the-vercel-sandbox) — Run OpenCode in an isolated Vercel Sandbox MicroVM with controlled egress, using the SDK to restrict network access so t
+- [Understanding Sandboxes](https://vercel.com/docs/sandbox/concepts) — Learn how Vercel Sandboxes provide on-demand, isolated compute environments for running untrusted code, testing applicat
+- [vercel sandbox](https://vercel.com/docs/cli/sandbox) — Interact with Vercel Sandbox from the Vercel CLI: list, create, connect, exec, copy, stop, and snapshot sandboxes from y
+- [OpenAI SDK](https://vercel.com/docs/sandbox/ecosystem/openai-sdk) — Use OpenAI function calling with AI Gateway to execute model-generated code in an isolated Vercel Sandbox.
+
+Full cross-link map for this page: [/docs/sandbox/quickstart.graph.md](/docs/sandbox/quickstart.graph.md)
+<!-- /docsgraph:related -->
+
+**Agent prompt**
+
+```text
+Help me set up Vercel Sandbox in this project. First, make sure the Vercel CLI is installed (`npm i -g vercel`). Then: 1. Install the @vercel/sandbox SDK. 2. Run `vercel link` and `vercel env pull` to get credentials. 3. Create a script that spins up a sandbox, runs code inside it, and captures the output. 4. Run it to verify the sandbox works.
+```
+
+> Install the [Vercel plugin](/docs/agent-resources/vercel-plugin?from=docs-callout\&source_path=%2Fdocs%2Fsandbox%2Fquickstart) to create and run a Vercel Sandbox with your coding agent.
+>
+> ```bash
+> npx plugins add vercel/vercel-plugin
+> ```
+
+## Prerequisites
+
+- A [Vercel account](https://vercel.com/signup)
+- [Vercel CLI](/docs/cli) installed (`npm i -g vercel`)
+- Node.js 22+ or Python 3.10+
+
+- ### Set up your environment
+  Create a new directory and connect it to a Vercel project. This is the recommended way to authenticate because the project handles secure [OIDC token authentication](/docs/sandbox/concepts/authentication) for you.
+
+  **Terminal**
+  ```bash filename="Terminal" framework=node
+  mkdir my-sandbox-app && cd my-sandbox-app
+  pnpm init
+  vercel link
+  ```
+  **Terminal**
+  ```bash filename="Terminal" framework=py
+  mkdir my-sandbox-app && cd my-sandbox-app
+  uv init
+  vercel link
+  ```
+  When prompted, select **Create a new project**. The project doesn't need any code deployed. It needs to exist so Vercel can generate authentication tokens for you.
+
+  Once linked, pull your environment variables to get an authentication token:
+  ```bash filename="Terminal"
+  vercel env pull
+  ```
+  This creates a `.env.local` file containing a token that the SDK uses to authenticate your requests. When you deploy to Vercel, token management happens automatically.
+
+- ### Install the SDK
+  **Terminal**
+  ```bash filename="Terminal" framework=node package-manager="npm"
+  npm install @vercel/sandbox dotenv @types/node tsx typescript
+  ```
+  **Terminal**
+  ```bash filename="Terminal" framework=node package-manager="yarn"
+  yarn add @vercel/sandbox dotenv @types/node tsx typescript
+  ```
+  **Terminal**
+  ```bash filename="Terminal" framework=node package-manager="pnpm"
+  pnpm add @vercel/sandbox dotenv @types/node tsx typescript
+  ```
+  **Terminal**
+  ```bash filename="Terminal" framework=node package-manager="bun"
+  bun add @vercel/sandbox dotenv @types/node tsx typescript
+  ```
+  **Terminal**
+  ```bash filename="Terminal" framework=py
+  uv add vercel python-dotenv
+  ```
+  For TypeScript, `dotenv` provides access to environment variables, `tsx` runs TypeScript code, `typescript` provides the compiler, and `@types/node` provides Node.js type definitions.
+
+- ### Write your code
+  Create a file that creates a sandbox and runs a command:
+
+  **index.ts**
+  ```ts filename="index.ts"
+  import { config } from 'dotenv';
+  config({ path: '.env.local' });
+
+  import { Sandbox } from '@vercel/sandbox';
+
+  async function main() {
+    const sandbox = await Sandbox.create();
+
+    const result = await sandbox.runCommand('echo', ['Hello from Vercel Sandbox!']);
+    console.log(await result.stdout());
+  }
+
+  main().catch(console.error);
+  ```
+  **main.py**
+  ```py filename="main.py"
+  import asyncio
+
+  from dotenv import load_dotenv
+  from vercel import sandbox
+
+  load_dotenv('.env.local')
+
+
+  async def main() -> None:
+      async with sandbox.create_sandbox(persistent=False) as box:
+          result = await box.run_process(
+              'echo',
+              ['Hello from Vercel Sandbox!'],
+              capture_output=True,
+              check=True,
+          )
+          print(result.stdout)
+
+
+  asyncio.run(main())
+  ```
+
+- ### Run it
+  **Terminal**
+  ```bash filename="Terminal" framework=node
+  pnpm tsx index.ts
+  ```
+  **Terminal**
+  ```bash filename="Terminal" framework=py
+  uv run python main.py
+  ```
+  You should see: `Hello from Vercel Sandbox!`
+
+  Sandboxes automatically stop after 5 minutes by default. They are also **persistent by default**: the filesystem is snapshotted on stop and restored the next time you resume the sandbox by name. To adjust the timeout, opt out of persistence, or manage running sandboxes, see [Working with Sandbox](/docs/sandbox/working-with-sandbox).
+  > **💡 Note:** Automatic snapshots count toward [Snapshot Storage](/docs/sandbox/pricing#snapshot-storage). For one-off workloads, pass `persistent: false` (or `--non-persistent` in the CLI) to opt out. See [Persistent Sandboxes](/docs/sandbox/concepts/persistent-sandboxes) for details.
+
+## What you just did
+
+1. **Set up authentication**: Connected to a Vercel project and pulled credentials to enable sandbox creation.
+2. **Created a sandbox**: Spun up an isolated Linux microVM.
+3. **Ran a command**: Executed code inside the secure environment.
+
+## Next steps
+
+- [JS SDK Reference](/docs/sandbox/sdk-reference): Full API documentation for JavaScript and TypeScript.
+- [Python SDK Reference](/docs/sandbox/python-sdk-reference): Full API documentation for Python.
+- [CLI Reference](/docs/sandbox/cli-reference): Manage sandboxes from the terminal.
+- [Snapshots](/docs/sandbox/concepts/snapshots): Save sandbox state to skip setup on future runs.
+- [Examples](/docs/sandbox/working-with-sandbox#examples): See real-world use cases.
+
+
+---
+
+[View full sitemap](/docs/sitemap)
