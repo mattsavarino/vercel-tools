@@ -46,10 +46,6 @@ Mirrored pages under `docs/vercel-official/pages/`:
 | Drives | `sandbox/concepts/drives.md` |
 | Daemons | `daemons.md` |
 | Eve | `eve.md` |
-| Multi-agent, harnesses | `agent-harnesses.md`, `agent-resources.md` |
+| Multi-agent, harnesses | `agent-harnesses.md`, `agent-harnesses/security.md`, `agent-resources.md` |
 | Learning loop (telemetry, evals) | `observability.md`, `ai-gateway.md` |
-| Brain/hands setup | `connect.md` (front door), `sandbox.md`, `vercel-firewall.md`, `workflows.md` |
-
-Relevant but not yet mirrored (add to `docs/vercel-official/sources.txt` when
-needed): `/docs/agent-harnesses/security`, `/docs/connect/frameworks/chat-sdk`,
-`/docs/connect/python-sdk-reference`.
+| Brain/hands setup | `connect.md` (front door), `connect/frameworks/chat-sdk.md`, `connect/python-sdk-reference.md`, `sandbox.md`, `vercel-firewall.md`, `workflows.md` |

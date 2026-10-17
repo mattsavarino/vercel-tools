@@ -243,6 +243,52 @@ Last reviewed: 2026-10-16
 - **Status**: Web Analytics GA.
 - **Docs**: `pages/analytics/limits-and-pricing.md`, `pages/speed-insights/limits-and-pricing.md`
 
+## Cost-efficient patterns
+
+Architecture choices that buy the most impact per dollar, built only from the
+services above. Plans in `docs/ideas/` should start here.
+
+1. **CDN first, compute on demand** (#3, #1): static and ISR by default;
+   Functions only where output truly varies per request. Flat Rate CDN on Pro
+   makes delivery a fixed cost.
+2. **Firewall in front of the bill** (#6): denied, challenged, or rate-limited
+   traffic incurs no CDN or transfer charges. Rate-limit expensive routes;
+   BotID Basic is free.
+3. **Wait cheaply** (#1, #16): Active CPU billing pauses during I/O, so
+   model, API, and database calls belong in Functions or Sandbox. CPU-heavy
+   work (media processing, large transforms) does not (inferred).
+4. **One durable background pattern** (#13, #14): Workflows plus Cron for all
+   async and scheduled work, instead of Queues or Daemons plus hand-rolled
+   retries. Cron is free; Workflows $0.02 per 1K events.
+5. **Brain separate from hands** (#18, #19, #16, #22): AI SDK plus AI Gateway
+   for thinking (no token markup, one budget, fallback); Sandbox for untrusted
+   actions; Connect for short-lived tokens so agents hold no secrets.
+6. **Client uploads to Blob** (#9): skip transfer charges on upload, and
+   serve at roughly a third of the FDT price.
+7. **Config at the edge** (#10): flags, redirects, and blocklists in Global
+   Config, read without a database round trip, rather than Middleware (#4)
+   doing a lookup on every request (inferred).
+8. **Agents see production** (#23, #24, #18): Vercel MCP, logs, and Gateway
+   logs give coding agents real deployment state, closing the telemetry,
+   optimization, evaluation loop. Base is free; Drains $0.50/GB on Pro.
+
+**Avoid for now**: #15 Daemons (beta, no published rates), #8 Services (beta),
+#21 Agent Harnesses (experimental), Flags Explorer ($250/month).
+
+### Cost checklist
+
+Quiet bill drivers to check before a deploy goes live:
+
+- [ ] ISR output is deterministic: no `new Date()` or random values (#3).
+- [ ] Middleware matchers are narrow; simple redirects live in `vercel.json`
+      or Global Config (#4, #10).
+- [ ] Uploads go client-direct to Blob, not through a Function (#9).
+- [ ] AI Gateway has a budget set (#18).
+- [ ] Expensive or public write routes have a WAF rate limit (#6).
+- [ ] Hobby hard stops are understood: Blob locks for 30 days and Image
+      Optimization returns 402 once over the limit (#9, #5).
+- [ ] Long jobs run in Workflows, not near the Function max duration (#1, #13).
+
 ## Not in the 25 (checked)
 
 - **Passport, Sign in with Vercel**: Passport is Enterprise-only (see 7); Sign in with Vercel only helps users who have Vercel accounts.

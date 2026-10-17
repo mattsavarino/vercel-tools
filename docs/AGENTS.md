@@ -1,7 +1,5 @@
 # AGENTS.md for vercel-tools docs
 
-Detected stack: Unspecified (informational only -- verify against actual project config)
-
 Task rules and workflow: `docs/tasks/AGENTS.md`.
 
 ## Review Panel
@@ -10,7 +8,7 @@ Task rules and workflow: `docs/tasks/AGENTS.md`.
 
 Everything repo-specific is in **`.claude/review-panel.md`**: the reviewer roster (with each reviewer's skip condition and launch focus), output paths, the deferred ledger, flags, hard triage rules, and approval gates. Edit that file to change who reviews what; the engine reads it at the start of every run. The config path is fixed -- do not rename it. Contract: agent-os `plugins/review-panel/README.md`.
 
-**Reviewers come from plugins by default.** `review-panel@mayurahq` supplies the generic, language-agnostic reviewers (`review-panel:reviewer-security`, `review-panel:reviewer-test`, `review-panel:reviewer-dx`, `review-panel:reviewer-docs`); the language reviewer comes from the matching stack plugin (`python-stack:reviewer-python`, `rust-stack:rust-reviewer`, `typescript-stack:reviewer-typescript`). Nothing is copied into this repo for those.
+**Reviewers come from plugins by default.** `review-panel@mayurahq` supplies the generic, language-agnostic reviewers (`review-panel:reviewer-security`, `review-panel:reviewer-test`, `review-panel:reviewer-dx`, `review-panel:reviewer-docs`). Nothing is copied into this repo for those. The roster has no language reviewer, since the repo holds no application code; add the matching stack plugin's reviewer if that changes.
 
 Write a repo-local `.claude/agents/reviewer-*.md` only to **override** a plugin reviewer (a repo-local file of the same name always wins) or to **add** a lens no plugin covers (e.g. `reviewer-aws.md`, `reviewer-domain.md`). Repo-local reviewers are read-only (`tools: Read, Grep, Glob`) -- the engine persists their output. Add a roster row in `.claude/review-panel.md` for each; a reviewer file with no roster row is reported as drift.
 
