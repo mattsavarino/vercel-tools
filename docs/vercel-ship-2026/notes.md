@@ -2,8 +2,9 @@
 
 - **Event**: Vercel Ship 2026, livestreamed 2026-10-15
 - **Stream**: https://www.youtube.com/watch?v=Fr5vzNknYJE (6:31:22)
-- **Source**: Matt's notes from watching live. Transcript follow-up:
-  `docs/tasks/planning/100-vercel-ship-2026-transcript.md`
+- **Source**: Matt's notes from watching live.
+- **Transcript**: `transcripts/livestream-0000-0140.md` (0:00 to 1:40:00,
+  YouTube auto-captions, uncorrected; verify names before quoting)
 
 ## Notes
 
@@ -29,12 +30,6 @@ For security purposes, separate "brain" (thinking) from "hands" (actions).
 - Front Door: ChatSDK / Next.js App
 - Brain: Cloud Models / Harnesses / Session Store / Vault
 - Hands (the untrusted layer): Sandbox => Firewall => Your Systems
-
-## Follow-up
-
-- [ ] Get the transcript(s): the stream had no captions on 2026-10-16. Check
-      back around 2026-10-20 for captions or Vercel's per-session uploads.
-      Tracked in `docs/tasks/planning/100-vercel-ship-2026-transcript.md`.
 
 ## Related docs
 
