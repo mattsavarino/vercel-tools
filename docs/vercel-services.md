@@ -12,8 +12,11 @@ The fixed list of 25 Vercel services an idea is matched against. Plans in
 - **Layers**, from Matt's Ship 2026 notes (`docs/vercel-ship-2026/notes.md`):
   front door, brain, hands (the untrusted layer), plus data, delivery,
   security, and ops.
+- **Stage claims**: `[Ship H:MM:SS]` marks a statement from the Ship 2026
+  keynote (`docs/vercel-ship-2026/transcripts/`), not the docs. Treat it as a
+  vendor claim until a docs sync confirms it.
 
-Last reviewed: 2026-10-16
+Last reviewed: 2026-10-19
 
 | # | Service | Layer | Grade | Status | One-line use |
 | --- | --- | --- | --- | --- | --- |
@@ -33,7 +36,7 @@ Last reviewed: 2026-10-16
 | 14 | Cron Jobs | Hands | A- | GA | Scheduled function invocations |
 | 15 | Daemons | Hands | C+ | Public beta | Long-running container workers, no inbound traffic |
 | 16 | Vercel Sandbox | Hands | A- | GA | Isolated microVMs for untrusted or agent code |
-| 17 | Drives | Data | B | Conflicting (GA per latest changelog) | Persistent storage mounted into sandboxes |
+| 17 | Drives | Data | B+ | GA (changelog; Ship 2026) | Persistent storage mounted into sandboxes |
 | 18 | AI Gateway | Brain | A | GA | One endpoint for many model providers, no token markup |
 | 19 | AI SDK | Brain | A | Open-source library | TypeScript API for models, tools, streaming, agents |
 | 20 | eve | Brain | B- | Beta | Filesystem-first framework for durable backend agents |
@@ -48,7 +51,9 @@ Last reviewed: 2026-10-16
 - **+** Active CPU billing pauses during I/O waits (database, model calls), which suits AI workloads.
 - **-** Max duration 300s on Hobby, 800s on Pro (30 min in beta); truly long jobs belong in Workflows, Sandbox, or Daemons.
 - **Cost**: Hobby includes 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M invocations. Pro on demand: Active CPU $0.128-$0.221/hr, memory $0.0106-$0.0183/GB-hr, invocations $0.60 per 1M.
-- **Status**: GA (inferred); 1800s extended duration is beta.
+- **Status**: GA (inferred); 1800s extended duration is beta. Python GA and
+  Dockerfile containers on Fluid announced [Ship 0:10:21, 0:12:25]; container
+  status not stated.
 - **Docs**: `pages/functions.md`, `pages/fluid-compute.md`, `pages/functions/usage-and-pricing.md`
 
 ### 2. Deployments, Git and Previews -- A+
@@ -171,20 +176,20 @@ Last reviewed: 2026-10-16
 - **Status**: GA.
 - **Docs**: `pages/sandbox.md`, `pages/sandbox/pricing.md`, `pages/sandbox/concepts/firewall.md`
 
-### 17. Drives -- B
+### 17. Drives -- B+
 - **What**: Persistent directories mounted into sandboxes (up to 4 per run) that keep workspaces and caches across runs, with read-only snapshots for sharing.
 - **+** Persists until deleted, unlike sandbox snapshots (30-day TTL); `fork()` gives each fan-out agent its own copy.
-- **-** Only usable mounted into a sandbox; Hobby drives default to 1 GiB; status signals conflict.
+- **-** Only usable mounted into a sandbox; Hobby drives default to 1 GiB.
 - **Cost**: Hobby includes 15 GB storage plus 30 GB/month each of reads and writes. Pro (iad1): $0.05/GB-month, $0.0015/GB reads, $0.004/GB writes.
-- **Status**: Conflicting (latest changelog says GA).
+- **Status**: GA per the latest changelog and [Ship 0:24:37]; some mirrored pages still say beta.
 - **Docs**: `pages/sandbox/concepts/drives.md`, `pages/sandbox/pricing.md`
 
 ### 18. AI Gateway -- A
 - **What**: One endpoint for text, image, video, speech, and embeddings across providers, with budgets, logs, BYOK, and fallback.
 - **+** No markup or platform fee on tokens, even with BYOK; works from any infrastructure.
 - **-** The free tier covers a subset of models at lower rate limits; credit top-ups carry payment-processing fees.
-- **Cost**: Provider list price from prepaid credits. Add-ons: Custom Reporting $0.075 per 1,000 writes and $5 per 1,000 queries; team allowlist or ZDR $0.10 per 1,000 requests; Trace Drains $0.05 per 1,000 traces plus $0.50/GB.
-- **Status**: GA.
+- **Cost**: Provider list price from prepaid credits. Add-ons: Custom Reporting $0.075 per 1,000 writes and $5 per 1,000 queries; team allowlist or ZDR $0.10 per 1,000 requests; Trace Drains $0.05 per 1,000 traces plus $0.50/GB. Token Pass, early access: $30/month for $80 of open-model usage, ZDR on by default [Ship 0:21:34].
+- **Status**: GA. Budgets per key, project, and team [Ship 0:20:34].
 - **Docs**: `pages/ai-gateway.md`, `pages/ai-gateway/pricing.md`
 
 ### 19. AI SDK -- A
@@ -198,7 +203,7 @@ Last reviewed: 2026-10-16
 ### 20. eve -- B-
 - **What**: Open-source, filesystem-first framework for durable backend agents (instructions, tools, skills, subagents) compiled onto Functions, Workflows, Sandbox, AI Gateway, and Connect.
 - **+** Durable sessions out of the box, with tool approval gates and a sandbox per agent.
-- **-** Beta, APIs may change, TypeScript only; AI SDK plus Workflows is the stable alternative (inferred).
+- **-** Beta, APIs may change, TypeScript only (Python support unconfirmed despite Python GA [Ship 0:10:21]); AI SDK plus Workflows is the stable alternative (inferred). Persistent memory, extensions, and dashboard deploy announced [Ship 0:17:33].
 - **Cost**: No eve fee; billed through the services it consumes.
 - **Status**: Beta.
 - **Docs**: `pages/eve.md`, `pages/eve/concepts.md`, `pages/eve/pricing.md`
@@ -263,6 +268,10 @@ services above. Plans in `docs/ideas/` should start here.
 5. **Brain separate from hands** (#18, #19, #16, #22): AI SDK plus AI Gateway
    for thinking (no token markup, one budget, fallback); Sandbox for untrusted
    actions; Connect for short-lived tokens so agents hold no secrets.
+   Anthropic's setup [Ship 1:21:58 to 1:37:17] adds: the harness on a durable
+   server, throwaway sandboxes booted per job, placeholder tokens in the
+   sandbox with real credentials injected by its firewall, egress deny by
+   default, and monitoring plus the kill switch outside the sandbox.
 6. **Client uploads to Blob** (#9): skip transfer charges on upload, and
    serve at roughly a third of the FDT price.
 7. **Config at the edge** (#10): flags, redirects, and blocklists in Global
@@ -303,7 +312,8 @@ Resolve against vercel.com before relying on these numbers.
 
 - Pro function invocations: "N/A" in the pricing tables, $0.60 per 1M in prose (`pages/pricing.md`, `pages/functions/usage-and-pricing.md`).
 - Pro included CDN requests: 1M in `pages/pricing/flat-rate-cdn.md`, 10M in the Blob pricing example.
-- Drives status: private beta, public beta, and GA links on different pages.
+- Drives status: private beta, public beta, and GA links on different pages; GA per changelog and Ship 2026.
+- Function duration: Ship 2026 says Python requests run "up to 30 minutes" [Ship 0:10:21]; the docs list 800s on Pro and 1800s as beta.
 - Hobby over-limit resets (Web Analytics, Sandbox) state two different rules on the same page.
 - `pages/daemons.md` frontmatter shows `last_updated: 2018-10-20` (placeholder).
 
