@@ -1,6 +1,7 @@
 # Claude Code
 .claude/worktrees/
 .claude/reviews/
+docs/reviews/
 .claude/settings.local.json
 
 # Environment
